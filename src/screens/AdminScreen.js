@@ -1,55 +1,137 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet, Modal, Button } from 'react-native';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../services/firebaseConfig';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  Modal,
+  Button,
+} from "react-native";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db, auth } from "../services/firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { UserForm } from "./RegisterScreen";
+
+const initialUser = {
+  name: "",
+  lastName: "",
+  typedocument: "",
+  documentNumber: "",
+  genre: "",
+  adress: "",
+  phone: "",
+  email: "",
+  password: "",
+};
 
 const AdminScreen = () => {
   const [patients, setPatients] = useState([]);
   const [specialists, setSpecialists] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [createUserModal, setCreateUserModal] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const [newUser, setNewUser] = useState(initialUser);
 
   const fetchUsers = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'users'));
+      const querySnapshot = await getDocs(collection(db, "users"));
       const patientsList = [];
       const specialistsList = [];
 
       querySnapshot.forEach((docSnap) => {
         const userData = docSnap.data();
         const user = { id: docSnap.id, ...userData };
-        if (user.role === 'paciente') patientsList.push(user);
-        if (user.role === 'especialista') specialistsList.push(user);
+        if (user.role === "paciente") patientsList.push(user);
+        if (user.role === "especialista") specialistsList.push(user);
       });
 
       setPatients(patientsList);
       setSpecialists(specialistsList);
     } catch (error) {
-      console.error('Error al obtener usuarios:', error);
+      console.error("Error al obtener usuarios:", error);
+    }
+  };
+
+  const handleCreateUser = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        newUser.email,
+        newUser.password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: newUser.name,
+        email: newUser.email,
+        typedocument: newUser.typedocument,
+        documentNumber: newUser.documentNumber,
+        genre: newUser.genre,
+        adress: newUser.adress,
+        phone: newUser.phone,
+        role: "paciente",
+      });
+
+      fetchUsers();
+      setCreateUserModal(false);
+      setNewUser(initialUser);
+    } catch (error) {
+      console.error("Error al editar usuario:", error);
+    }
+  };
+
+  const handleCreateSpecialist = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        newUser.email,
+        newUser.password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: newUser.name,
+        email: newUser.email,
+        typedocument: newUser.typedocument,
+        documentNumber: newUser.documentNumber,
+        genre: newUser.genre,
+        adress: newUser.adress,
+        phone: newUser.phone,
+        role: "especialista",
+      });
+
+      fetchUsers();
+      setCreateUserModal(false);
+      setNewUser(initialUser);
+    } catch (error) {
+      console.error("Error al editar usuario:", error);
     }
   };
 
   const handleDeleteUser = async (id) => {
     try {
-      await deleteDoc(doc(db, 'users', id));
+      await deleteDoc(doc(db, "users", id));
       fetchUsers();
     } catch (error) {
-      console.error('Error al eliminar usuario:', error);
+      console.error("Error al eliminar usuario:", error);
     }
-  };
-
-  const openEditModal = (user) => {
-    setSelectedUser(user);
-    setModalVisible(true);
   };
 
   const handleEditUser = async () => {
     try {
-      const userRef = doc(db, 'users', selectedUser.id);
+      const userRef = doc(db, "users", selectedUser.id);
       await updateDoc(userRef, {
         name: selectedUser.name,
         typedocument: selectedUser.typedocument,
@@ -60,8 +142,13 @@ const AdminScreen = () => {
       setSelectedUser(null);
       fetchUsers();
     } catch (error) {
-      console.error('Error al editar usuario:', error);
+      console.error("Error al editar usuario:", error);
     }
+  };
+
+  const openEditModal = (user) => {
+    setSelectedUser(user);
+    setModalVisible(true);
   };
 
   const renderItem = ({ item }) => (
@@ -89,13 +176,74 @@ const AdminScreen = () => {
     </View>
   );
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pacientes</Text>
-      <FlatList data={patients} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={styles.title}>Pacientes</Text>
+        <Button
+          title="Crear Paciente"
+          onPress={() => setCreateUserModal(true)}
+          color="#4CAF50"
+        />
+      </View>
 
-      <Text style={styles.title}>Especialistas</Text>
-      <FlatList data={specialists} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      <FlatList
+        data={patients}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+      {/* Create patient */}
+      <Modal visible={createUserModal} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Crear Paciente</Text>
+          <UserForm newUser={newUser} setNewUser={setNewUser} />
+          <View style={styles.modalButtons}>
+            <Button title="Crear Paciente" onPress={handleCreateUser} />
+            <Button
+              title="Cancelar"
+              onPress={() => setCreateUserModal(false)}
+              color="gray"
+            />
+          </View>
+        </View>
+      </Modal>
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={styles.title}>Especialistas</Text>
+        <Button
+          title="Crear Especialista"
+          onPress={() => setCreateUserModal(true)}
+          color="#4CAF50"
+        />
+      </View>
+      <FlatList
+        data={specialists}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+
+      {/* Create specialist */}
+      <Modal visible={createUserModal} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Crear Especialista</Text>
+          <UserForm newUser={newUser} setNewUser={setNewUser} />
+          <View style={styles.modalButtons}>
+            <Button
+              title="Crear Especialista"
+              onPress={handleCreateSpecialist}
+            />
+            <Button
+              title="Cancelar"
+              onPress={() => setCreateUserModal(false)}
+              color="gray"
+            />
+          </View>
+        </View>
+      </Modal>
 
       {/* MODAL DE EDICIÓN */}
       <Modal visible={modalVisible} animationType="slide">
@@ -105,31 +253,43 @@ const AdminScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Nombre"
-            value={selectedUser?.name || ''}
-            onChangeText={(text) => setSelectedUser({ ...selectedUser, name: text })}
+            value={selectedUser?.name || ""}
+            onChangeText={(text) =>
+              setSelectedUser({ ...selectedUser, name: text })
+            }
           />
           <TextInput
             style={styles.input}
             placeholder="Tipo de documento"
-            value={selectedUser?.typedocument || ''}
-            onChangeText={(text) => setSelectedUser({ ...selectedUser, typedocument: text })}
+            value={selectedUser?.typedocument || ""}
+            onChangeText={(text) =>
+              setSelectedUser({ ...selectedUser, typedocument: text })
+            }
           />
           <TextInput
             style={styles.input}
             placeholder="Correo"
-            value={selectedUser?.email || ''}
-            onChangeText={(text) => setSelectedUser({ ...selectedUser, email: text })}
+            value={selectedUser?.email || ""}
+            onChangeText={(text) =>
+              setSelectedUser({ ...selectedUser, email: text })
+            }
           />
           <TextInput
             style={styles.input}
             placeholder="Rol"
-            value={selectedUser?.role || ''}
-            onChangeText={(text) => setSelectedUser({ ...selectedUser, role: text })}
+            value={selectedUser?.role || ""}
+            onChangeText={(text) =>
+              setSelectedUser({ ...selectedUser, role: text })
+            }
           />
 
           <View style={styles.modalButtons}>
             <Button title="Guardar cambios" onPress={handleEditUser} />
-            <Button title="Cancelar" onPress={() => setModalVisible(false)} color="gray" />
+            <Button
+              title="Cancelar"
+              onPress={() => setModalVisible(false)}
+              color="gray"
+            />
           </View>
         </View>
       </Modal>
@@ -139,47 +299,52 @@ const AdminScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginVertical: 15 },
+  title: { fontSize: 22, fontWeight: "bold", marginVertical: 15 },
   listItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     padding: 15,
     marginVertical: 8,
     borderRadius: 10,
   },
   itemText: { fontSize: 16 },
   actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
   },
   editButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     padding: 8,
     borderRadius: 5,
     marginRight: 10,
   },
   deleteButton: {
-    backgroundColor: '#E53935',
+    backgroundColor: "#E53935",
     padding: 8,
     borderRadius: 5,
   },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  buttonText: { color: "#fff", fontWeight: "bold" },
   modalContainer: {
     flex: 1,
     padding: 30,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
   },
-  modalTitle: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 12,
     marginBottom: 15,
     borderRadius: 8,
   },
   modalButtons: {
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 10,
   },
 });

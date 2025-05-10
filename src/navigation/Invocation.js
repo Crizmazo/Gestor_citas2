@@ -1,18 +1,21 @@
-import React, { useContext } from 'react';
-import { AuthProvider, AuthContext } from '../context/AutenticacionContext'; 
-import Navigation from './Navigation';
-import PortalNavigation from './PortalNavigation';
+import React from "react";
+import { AuthProvider } from "../context/AutenticacionContext";
+import PortalNavigation from "./PortalNavigation";
+import { NavigationContainer } from "@react-navigation/native";
+
+import { View, Text } from "react-native";
 
 const Invocacion = () => {
-  const { user } = useContext(AuthContext);
-  return user ? <PortalNavigation /> : <Navigation />;
+  return <PortalNavigation />;
 };
 
 const InvocationNavigation = () => {
   return (
-    <AuthProvider>
-      <Invocacion />
-    </AuthProvider>
+    <NavigationContainer>
+      <AuthProvider>
+        <Invocacion />
+      </AuthProvider>
+    </NavigationContainer>
   );
 };
 
