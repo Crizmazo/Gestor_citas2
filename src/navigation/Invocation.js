@@ -3,8 +3,6 @@ import { AuthProvider } from "../context/AutenticacionContext";
 import PortalNavigation from "./PortalNavigation";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { View, Text } from "react-native";
-
 const Invocacion = () => {
   return <PortalNavigation />;
 };

@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -65,7 +66,9 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registrarse</Text>
+      <ScrollView>
       <UserForm newUser={newUser} setNewUser={setNewUser} />
+      </ScrollView>
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
@@ -129,6 +132,7 @@ export const UserForm = ({ newUser, setNewUser }) => {
         dropdownIconColor="#274b6a"
         mode="dropdown"
       >
+        <Picker.Item label="Tipo de documento" />
         <Picker.Item label="Cédula de Ciudadanía" value="CC" />
         <Picker.Item label="Cédula de Extranjería" value="CE" />
         <Picker.Item label="Tarjeta de Identidad" value="TI" />
@@ -185,10 +189,13 @@ export const UserForm = ({ newUser, setNewUser }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     padding: 16,
     backgroundColor: "#ffffff",
+  },
+  containerScroll: {
+    
   },
   title: {
     fontSize: 24,
