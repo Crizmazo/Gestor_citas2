@@ -6,7 +6,7 @@ import Agendamiento from "../screens/Agendamiento";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import AdminScreen from "../screens/AdminScreen";
-
+import Citas from "../screens/Citas";
 const Stack = createNativeStackNavigator();
 
 const PortalNavigation = () => {
@@ -43,6 +43,11 @@ const PortalNavigation = () => {
         name="Admin"
         component={AdminScreen}
         options={{ title: "Admin" }}
+      />
+      <Stack.Screen
+        name="Citas"
+        component={Citas}
+        options={{ title: "Citas" }}
       />
     </Stack.Navigator>
   );
