@@ -311,17 +311,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
+    padding: 10,
   },
   editButton: {
     backgroundColor: "#4CAF50",
     padding: 8,
     borderRadius: 5,
     marginRight: 10,
+    borderRadius: 15,
   },
   deleteButton: {
     backgroundColor: "#E53935",
     padding: 8,
-    borderRadius: 5,
+    borderRadius: 15,
   },
   buttonText: { color: "#fff", fontWeight: "bold" },
   modalContainer: {
@@ -330,6 +332,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
   },
+  
   modalTitle: {
     fontSize: 24,
     fontWeight: "bold",

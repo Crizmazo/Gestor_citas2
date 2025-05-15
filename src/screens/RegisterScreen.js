@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -63,6 +64,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Text style={styles.title}>Registrarse</Text>
       <UserForm newUser={newUser} setNewUser={setNewUser} />
@@ -77,6 +79,7 @@ const RegisterScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 

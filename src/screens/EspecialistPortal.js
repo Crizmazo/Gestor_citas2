@@ -1,7 +1,11 @@
-import React from 'react';
+import { DocumentSnapshot } from 'firebase/firestore';
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../context/AutenticacionContext';
+
 
 const EspecialistPortal = ({ navigation }) => {
+ const { user } = useContext(AuthContext);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Encabezado con foto e información */}
@@ -12,16 +16,25 @@ const EspecialistPortal = ({ navigation }) => {
           style={styles.avatar}
         />
         <View style={styles.doctorInfo}>
-          <Text style={styles.name}>Dr. </Text>
+          <Text style={styles.name}>{'Dr. '+ user.name} </Text>
+          
           
         </View>
       </View>
 
       {/* Opciones principales */}
       <View style={styles.menu}>
-        <MenuItem title="cita" onPress={() => navigation.navigate('Citas')} icon="📝" />
+        <MenuItem title="Cita" onPress={() => navigation.navigate('Agendamiento')} icon="📝" />
         <MenuItem title="Historial" onPress={() => navigation.navigate('historial')} icon="📜" />
         <MenuItem title="Pacientes" onPress={() => navigation.navigate('pacientes')} icon="👥" />
+      </View>
+      {/* Opciones secundarias */}
+      <View style={styles.cerrarSesion}>
+       <TouchableOpacity
+               style={{ backgroundColor: 'red', padding: 16, borderRadius: 12, marginBottom: 16 }}
+               onPress={() => navigation.navigate('Login')} >
+               <Text style={{ color: '#fff', fontSize: 16 }} >Cerrar Sesión</Text> 
+               </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -33,7 +46,7 @@ const MenuItem = ({ title, onPress, icon }) => (
     <Text style={styles.icon}>{icon}</Text>
     <View style={styles.menuTextContainer}>
       <Text style={styles.menuTitle}>{title}</Text>
-      <Text style={styles.menuSubtitle}>Lorem Ipsum</Text>
+      <Text style={styles.menuSubtitle}></Text>
     </View>
     <Text style={styles.arrow}>›</Text>
   </TouchableOpacity>
@@ -42,7 +55,7 @@ const MenuItem = ({ title, onPress, icon }) => (
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#0a1d42',
+    backgroundColor: '#add8e6',
     flexGrow: 1,
   },
   header: {
@@ -72,12 +85,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   menu: {
-    backgroundColor: '#1e2a47',
+    backgroundColor: '#90D5FF',
     borderRadius: 12,
     paddingVertical: 10,
   },
   menuItem: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     padding: 15,
     borderBottomColor: '#2e3c5d',
@@ -96,12 +109,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   menuSubtitle: {
-    color: '#aaa',
+    color: '#000',
     fontSize: 12,
   },
   arrow: {
     color: '#fff',
     fontSize: 20,
+    display: 'none',
+  },
+  cerrarSesion: {
+    alignItems: 'flex-end',
+    marginTop: 20,
+    color: '#fff',
+    borderRadius: 15,
+    paddingVertical: 20,
   },
 });
 
