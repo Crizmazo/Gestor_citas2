@@ -7,6 +7,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import AdminScreen from "../screens/AdminScreen";
 import Citas from "../screens/Citas";
+import HistoryScreen from "../screens/HistoryScreen";
 const Stack = createNativeStackNavigator();
 
 const PortalNavigation = () => {
@@ -49,6 +50,16 @@ const PortalNavigation = () => {
         component={Citas}
         options={{ title: "Citas" }}
       />
+      <Stack.Screen
+        name="historial"
+        component={HistoryScreen}
+        options={{ title: "Historial" }}
+        />
+        <Stack.Screen
+        name="WebScreen"
+        component={HistoryScreen}
+        options={{ title: "Web" }}
+        />
     </Stack.Navigator>
   );
 };

@@ -18,7 +18,6 @@ const EspecialistPortal = ({ navigation }) => {
         <View style={styles.doctorInfo}>
           <Text style={styles.name}>{'Dr. '+ user.name} </Text>
           
-          
         </View>
       </View>
 
