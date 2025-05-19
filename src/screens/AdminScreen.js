@@ -26,15 +26,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { UserForm } from "./RegisterScreen";
 
 // WebScreen.js content (pasted directly)
-const firebaseConfig = {
-  apiKey: "AIzaSyClTmmWOdKHaZoHilB9YVCYBdw6ogum-Y0",
-  authDomain: "crizmazo.firebaseapp.com",
-  projectId: "crizmazo",
-  storageBucket: "crizmazo.firebasestorage.app",
-  messagingSenderId: "954719278904",
-  appId: "1:954719278904:web:a89d4e0700f878eb6753cd",
-  measurementId: "G-9B0VRQNBDG",
-};
+
 
 const MostrarDatosFirebase = () => {
   const [datos, setDatos] = useState([]);
@@ -118,7 +110,7 @@ const initialUser = {
   role: "paciente",
 };
 
-const AdminScreen = () => {
+const AdminScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
   const [specialists, setSpecialists] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -284,11 +276,7 @@ const AdminScreen = () => {
   };
 
     const handleVerEnWeb = () => {
-        const url = 'http://localhost:5173/'; 
-        Linking.openURL(url).catch(err => {
-            console.error('ocurrio un error: ', err);
-            Alert.alert('Error', 'No podemos abrir este sitio web, valida tu conexión a internet');
-        });
+       navigation.navigate("WebScreen");
     };
 
 
