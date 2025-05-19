@@ -8,7 +8,7 @@ const EspecialistPortal = ({ navigation }) => {
  const { user } = useContext(AuthContext);
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Encabezado con foto e información */}
+      
       <View style={styles.header}>
         <Text style={styles.title}>En Linea</Text>
         <Image
