@@ -7,6 +7,8 @@ const Citas = ({ navigation }) => {
     const { user } = useContext(AuthContext);
     const [disponibles, setDisponibles] = useState([]);
     const db = getFirestore();
+    const nombresEspecialistas = ["Dra. Ana López", "Dr. Carlos Rodríguez", "Dra. Sofía Martínez", "Dr. Javier Pérez", "Dra. Isabel García"];
+
 
     useEffect(() => {
         const cargarDisponibilidad = async () => {
@@ -65,8 +67,8 @@ const Citas = ({ navigation }) => {
                     style={styles.dispoItem}
                     onPress={() => agendarCita(disp)}
                 >
-                    <Text>📅 {disp.fecha} ⏰ {disp.hora}</Text>
-                    <Text>Especialista: {disp.nombre_especialista || disp.id_especialista}</Text>
+                 <Text>📅 {disp.fecha} ⏰ {disp.hora}</Text>
+                 <Text>Especialista: {nombresEspecialistas[Math.floor(Math.random() * nombresEspecialistas.length)]}</Text>
                 </TouchableOpacity>
             ))}
         </ScrollView>

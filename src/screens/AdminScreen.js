@@ -348,7 +348,14 @@ const AdminScreen = ({navigation}) => {
         <TouchableOpacity style={styles.viewWebButton} onPress={handleVerEnWeb}>
             <Text style={styles.buttonText}>Ver en la Web</Text>
         </TouchableOpacity>
-
+        
+        <Button
+               title="Cerrar sesión"
+               onPress={() => {
+               navigation.navigate("Login");
+               }}
+               color="#d9534f"
+             />
       <Modal visible={createPatientModal} animationType="slide">
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Crear Paciente</Text>
@@ -380,15 +387,8 @@ const AdminScreen = ({navigation}) => {
           <Text style={styles.modalTitle}>Crear Especialista</Text>
           <UserForm newUser={newUser} setNewUser={setNewUser} />
           <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={newSpecialistDocumentType}
-              onValueChange={(value) => setNewSpecialistDocumentType(value)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Cédula de Ciudadanía" value="CC" />
-              <Picker.Item label="Cédula de Extranjería" value="CE" />
-              <Picker.Item label="Tarjeta de Identidad" value="TI" />
-            </Picker>
+
+          
           </View>
           <View style={styles.modalButtons}>
             <Button

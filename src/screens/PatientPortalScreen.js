@@ -232,11 +232,6 @@ const PatientPortalScreen = ({ navigation }) => {
                     }}
                     color="#d9534f"
                 />
-                <Button
-                    title="Cancelar/Reprogramar cita"
-                    onPress={() => navigation.navigate("Cancelacion_Reprogramacion")}
-                    color="#d9534f"
-                />
             </View>
         </View>
     );

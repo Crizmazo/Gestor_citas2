@@ -34,7 +34,6 @@
     "sdkVersion": "49.0.0",
     "extra": {
       "eas": {
-        "projectId": "71d7fb0e-2b6e-4b5d-8e38-49111af4e11d"
       }
     }
   }
