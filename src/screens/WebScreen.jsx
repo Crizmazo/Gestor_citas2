@@ -13,19 +13,19 @@ const WebScreen = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        // Usuarios
+       
         const usuariosSnap = await getDocs(collection(db, "users"));
         setUsuarios(usuariosSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-        // Disponibilidad
+       
         const dispSnap = await getDocs(collection(db, "disponibilidad"));
         setDisponibilidad(dispSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-        // Citas
+        
         const citasSnap = await getDocs(collection(db, "citas"));
         setCitas(citasSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-        // Patients
+       
         const patientsSnap = await getDocs(collection(db, "patients"));
         setPatients(patientsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       } catch (error) {

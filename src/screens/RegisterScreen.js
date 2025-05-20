@@ -12,6 +12,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { sendPushNotification, registerForPushNotificationsAsync } from '../services/notifications';
 
 const RegisterScreen = ({ navigation }) => {
   const [newUser, setNewUser] = useState({
@@ -46,6 +47,17 @@ const RegisterScreen = ({ navigation }) => {
         phone: newUser.phone,
         role: "paciente",
       });
+
+      // Obtener el token del dispositivo
+      const token = await registerForPushNotificationsAsync();
+
+      // Enviar la notificación de bienvenida
+      if (token) {
+        await sendPushNotification(token, {
+          title: "Bienvenido a nuestro gestor de Citas",
+          body: "¡Tu registro fue exitoso!"
+        });
+      }
 
       alert("Registro exitoso");
       navigation.navigate("Login");

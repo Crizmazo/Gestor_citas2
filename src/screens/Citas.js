@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { collection, getDocs, query, where, addDoc, deleteDoc, getFirestore, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, deleteDoc, getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { AuthContext } from '../context/AutenticacionContext';
 
-const Citas = () => {
+const Citas = ({ navigation }) => {
     const { user } = useContext(AuthContext);
     const [disponibles, setDisponibles] = useState([]);
     const db = getFirestore();
@@ -19,32 +19,36 @@ const Citas = () => {
 
     const agendarCita = async (disponibilidad) => {
         try {
+           
             const citaRef = await addDoc(collection(db, 'citas'), {
                 fecha: disponibilidad.fecha,
                 hora: disponibilidad.hora,
                 id_especialista: disponibilidad.id_especialista,
                 id_paciente: user.uid,
                 nombre_paciente: user.name,
+                nombre_especialista: disponibilidad.nombre_especialista || '', 
+                estado: 'agendada'
             });
 
             const citaId = citaRef.id;
 
-            // Actualizar perfil del paciente con la cita
-            const pacienteRef = doc(db, 'users', user.uid); // Asegúrate de que 'users' es la colección correcta
+            // 2. Agregar la cita al array de citas del paciente
+            const pacienteRef = doc(db, 'users', user.uid);
             await updateDoc(pacienteRef, {
-                citaId: citaId, // Guarda el ID de la cita en el perfil del paciente
+                citas: arrayUnion(citaId)
             });
 
-            // Actualizar perfil del especialista con la cita
-             const especialistaRef = doc(db, 'users', disponibilidad.id_especialista);  //accessing with id
-             await updateDoc(especialistaRef, {
-                citaId: citaId,
+            // 3. Agregar la cita al array de citas del especialista
+            const especialistaRef = doc(db, 'users', disponibilidad.id_especialista);
+            await updateDoc(especialistaRef, {
+                citas: arrayUnion(citaId)
             });
 
-            await deleteDoc(doc(db, 'disponibilidad', disponibilidad.id)); //eliminar disponibilidad
+            // 4. Eliminar la disponibilidad seleccionada
+            await deleteDoc(doc(db, 'disponibilidad', disponibilidad.id));
 
             Alert.alert('Cita agendada con éxito');
-             navigation.navigate('PatientPortalScreen');
+            navigation.navigate('PatientPortalScreen');
 
         } catch (error) {
             console.error(error);
@@ -57,11 +61,12 @@ const Citas = () => {
             <Text style={styles.title}>Horarios Disponibles</Text>
             {disponibles.map((disp, index) => (
                 <TouchableOpacity
-                    key={index}
+                    key={disp.id}
                     style={styles.dispoItem}
                     onPress={() => agendarCita(disp)}
                 >
                     <Text>📅 {disp.fecha} ⏰ {disp.hora}</Text>
+                    <Text>Especialista: {disp.nombre_especialista || disp.id_especialista}</Text>
                 </TouchableOpacity>
             ))}
         </ScrollView>
