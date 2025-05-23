@@ -34,19 +34,16 @@ const Citas = ({ navigation }) => {
 
             const citaId = citaRef.id;
 
-            // 2. Agregar la cita al array de citas del paciente
             const pacienteRef = doc(db, 'users', user.uid);
             await updateDoc(pacienteRef, {
                 citas: arrayUnion(citaId)
             });
 
-            // 3. Agregar la cita al array de citas del especialista
             const especialistaRef = doc(db, 'users', disponibilidad.id_especialista);
             await updateDoc(especialistaRef, {
                 citas: arrayUnion(citaId)
             });
 
-            // 4. Eliminar la disponibilidad seleccionada
             await deleteDoc(doc(db, 'disponibilidad', disponibilidad.id));
 
             Alert.alert('Cita agendada con éxito');

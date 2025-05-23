@@ -25,7 +25,6 @@ import { db, auth } from "../services/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { UserForm } from "./RegisterScreen";
 
-// WebScreen.js content (pasted directly)
 
 
 const MostrarDatosFirebase = () => {
@@ -35,7 +34,7 @@ const MostrarDatosFirebase = () => {
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "usuarios")); // Lee la colección "usuarios"
+        const querySnapshot = await getDocs(collection(db, "usuarios")); 
         const datosObtenidos = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -43,7 +42,6 @@ const MostrarDatosFirebase = () => {
         setDatos(datosObtenidos);
       } catch (error) {
         console.error("Error al obtener datos: ", error);
-        // Maneja el error de acuerdo a tus necesidades
       } finally {
         setLoading(false);
       }
@@ -68,7 +66,7 @@ const MostrarDatosFirebase = () => {
           <Text style={stylesWeb.itemText}>
             {item.id} =&gt; {JSON.stringify(item.nombre)}
           </Text>
-          {/* Muestra otros campos de los datos aquí */}
+          {}
         </View>
       ))}
     </ScrollView>
@@ -95,7 +93,6 @@ const stylesWeb = StyleSheet.create({
     fontSize: 16,
   },
 });
-// End of WebScreen.js content
 
 const initialUser = {
   name: "",

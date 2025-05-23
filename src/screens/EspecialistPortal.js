@@ -21,13 +21,13 @@ const EspecialistPortal = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Opciones principales */}
+      {}
       <View style={styles.menu}>
         <MenuItem title="Cita" onPress={() => navigation.navigate('Agendamiento')} icon="📝" />
         <MenuItem title="Historial" onPress={() => navigation.navigate('historial')} icon="📜" />
         <MenuItem title="Pacientes" onPress={() => navigation.navigate('pacientes')} icon="👥" />
       </View>
-      {/* Opciones secundarias */}
+      {}
       <View style={styles.cerrarSesion}>
        <TouchableOpacity
                style={{ backgroundColor: 'red', padding: 16, borderRadius: 12, marginBottom: 16 }}
@@ -39,7 +39,6 @@ const EspecialistPortal = ({ navigation }) => {
   );
 };
 
-// Componente reutilizable para ítems del menú
 const MenuItem = ({ title, onPress, icon }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress}>
     <Text style={styles.icon}>{icon}</Text>

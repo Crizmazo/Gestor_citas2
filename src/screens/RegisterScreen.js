@@ -48,10 +48,8 @@ const RegisterScreen = ({ navigation }) => {
         role: "paciente",
       });
 
-      // Obtener el token del dispositivo
       const token = await registerForPushNotificationsAsync();
 
-      // Enviar la notificación de bienvenida
       if (token) {
         await sendPushNotification(token, {
           title: "Bienvenido a nuestro gestor de Citas",
@@ -230,7 +228,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    color: "#274b6a", // Asegúrate de que el texto del picker sea visible
+    color: "#274b6a", 
   },
   button: {
     backgroundColor: "#274b6a",
